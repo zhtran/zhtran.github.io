@@ -1794,3 +1794,10 @@ code {
 #header-post #actions {
   direction: ltr !important;
 }
+.post-copyright {
+  margin: 2em 0 0;
+  padding: 0.5em 1em;
+  border-left: 3px solid #ff1700;
+  background-color: #e2e0de;
+  list-style: none;
+}

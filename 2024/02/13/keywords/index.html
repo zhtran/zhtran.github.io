@@ -56,6 +56,9 @@
     
 	<!-- mathjax -->
 	
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+  
 <meta name="generator" content="Hexo 7.1.1"></head>
 
 <body class="max-width mx-auto px3 ltr">
@@ -212,8 +215,87 @@
 
   </div>
 </article>
+// disqus 评论系统部分
+
+// 下面添加 Gitalk 部分
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+    <script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script type="text/javascript">
+        var gitalk = new Gitalk({
+            clientID: 'a251c4aeb0c62b522f30',
+            clientSecret: 'a6b700130ab4a74cbd52c654259679a58463c660',
+            id: md5(window.location.pathname),
+            repo: 'zhtran.github.io',
+            owner: 'zhtran',
+            admin: 'zhtran',
+            distractionFreeMode: ''
+        })
+        gitalk.render('gitalk-container')
+    </script>
 
 
+<div>    
+  <ul class="post-copyright">
+     <li class="post-copyright-link">
+      <strong>本文作者：</strong>
+      <a href="/">zhtran</a>
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文标题：</strong>
+      <a href="{{ url_for(config.permalink) }}">
+    
+        <a class="" href="/2024/02/13/keywords/">C Language中的关键字</a>
+    
+
+
+</a>
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a title="C Language中的关键字">http://zhtran.com/2024/02/13/keywords/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本文由 zhtran 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" title="Attribution-NonCommercial-NoDerivatives 4.0 International" rel="license" target="_blank">CC BY-NC-ND 4.0</a>, 转载请保留以上声明信息！
+    </li>
+  </ul>
+</div>
+
+<script>
+  function setClipboardText(event){
+      // clipboardData 对象是为通过编辑菜单、快捷菜单和快捷键执行的编辑操作所保留的，也就是你复制或者剪切内容
+      let clipboardData = event.clipboardData || window.clipboardData;
+      // 如果未复制或者未剪切，则return出去
+      if (!clipboardData) { return; }
+      event.preventDefault();
+      // Selection 对象，表示用户选择的文本范围或光标的当前位置。
+      //     声明一个变量接收 -- 用户输入的剪切或者复制的文本转化为字符串
+      let text = window.getSelection().toString();
+  
+      if (text) {
+          // 如果文本存在则先取消文本默认事件
+          event.preventDefault();
+          // 通过调用常clipboardData对象的 setData(format, data) 方法；来设置相关文本
+          // format: 一个DOMString 表示要添加到 drag object的拖动数据的类型。
+          // data: 一个 DOMString表示要添加到 drag object的数据。
+          var copyright = '\n\n'
+          + '——————————————————————'
+          + '\n版权声明：本文为「zhtran」的原创文章，遵循CC BY-NC-ND 4.0版权协议，转载请附上原文出处链接及本声明。'
+          + '\n原文链接：http://zhtran.com/2024/02/13/keywords/'
+  
+          clipboardData.setData('text/plain', text + copyright);
+  
+      }
+  };
+  var contents = document.getElementsByClassName("content");
+  // 监听文章内容的copy事件
+  contents[0].addEventListener('copy',function(e){
+      setClipboardText(e);
+  });
+</script>
 
         
           <div id="footer-post-container">
@@ -375,6 +457,10 @@
 <!-- Disqus Comments -->
 
 <!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
 
 </body>
 </html>
