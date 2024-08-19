@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="比例-积分-微分控制（PID）是一种控制领域应用最广泛的算法，其计算流程与应用场景并无关系，是一种典型的无模型控制方法。 PID算法的输入为误差值或是由误差值衍生的信号，输出经比例、积分、微分过程相加后的结果。  u(t)&#x3D;K\left(e(t)+\dfrac{1}{T_i}e(t)\mathrm{d}t+T_d\dfrac{\mathrm{d}}{\mathrm{d}t}e(t)\right)也">
+<meta property="og:type" content="article">
+<meta property="og:title" content="各种各样的PID">
+<meta property="og:url" content="http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/index.html">
+<meta property="og:site_name" content="zhtran&#39;s blog.">
+<meta property="og:description" content="比例-积分-微分控制（PID）是一种控制领域应用最广泛的算法，其计算流程与应用场景并无关系，是一种典型的无模型控制方法。 PID算法的输入为误差值或是由误差值衍生的信号，输出经比例、积分、微分过程相加后的结果。  u(t)&#x3D;K\left(e(t)+\dfrac{1}{T_i}e(t)\mathrm{d}t+T_d\dfrac{\mathrm{d}}{\mathrm{d}t}e(t)\right)也">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-04-18T14:23:00.000Z">
+<meta property="article:modified_time" content="2024-08-19T06:34:00.000Z">
+<meta property="article:author" content="zhtran">
+<meta property="article:tag" content="机器人控制">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>各种各样的PID</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css" />
+  
+<meta name="generator" content="Hexo 7.2.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tag</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2024/08/19/%E9%98%BB%E6%8A%97%EF%BC%8C%E5%AF%BC%E7%BA%B3%E4%B8%8E%E5%8A%9B%E4%BD%8D%E6%B7%B7%E5%90%88/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/02/13/C%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E5%85%B3%E9%94%AE%E5%AD%97/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&text=各种各样的PID"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&title=各种各样的PID"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&is_video=false&description=各种各样的PID"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=各种各样的PID&body=Check out this article: http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&title=各种各样的PID"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&title=各种各样的PID"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&title=各种各样的PID"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&title=各种各样的PID"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&name=各种各样的PID&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&t=各种各样的PID"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%8D%E7%BD%AE%E5%BC%8FPID%E4%B8%8E%E5%A2%9E%E9%87%8F%E5%BC%8FPID"><span class="toc-number">1.</span> <span class="toc-text">位置式PID与增量式PID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%B2%E7%BA%A7PID"><span class="toc-number">2.</span> <span class="toc-text">串级PID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E5%89%8D%E9%A6%88%E8%A1%A5%E5%81%BF%E7%9A%84PID"><span class="toc-number">3.</span> <span class="toc-text">基于前馈补偿的PID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E7%B3%8APID"><span class="toc-number">4.</span> <span class="toc-text">模糊PID</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        各种各样的PID
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">zhtran</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-04-18T14:23:00.000Z" class="dt-published" itemprop="datePublished">2024-04-18</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/%E9%9A%8F%E7%AC%94/">随笔</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E6%9C%BA%E5%99%A8%E4%BA%BA%E6%8E%A7%E5%88%B6/" rel="tag">机器人控制</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>比例-积分-微分控制（PID）是一种控制领域应用最广泛的算法，其计算流程与应用场景并无关系，是一种典型的无模型控制方法。</p>
+<p>PID算法的输入为误差值或是由误差值衍生的信号，输出经比例、积分、微分过程相加后的结果。</p>
+<script type="math/tex; mode=display">
+u(t)=K\left(e(t)+\dfrac{1}{T_i}e(t)\mathrm{d}t+T_d\dfrac{\mathrm{d}}{\mathrm{d}t}e(t)\right)</script><p>也可以写成：</p>
+<script type="math/tex; mode=display">
+u(t)=K_pe(t)+K_i\int_0^te(\tau)\mathrm{d}\tau+K_d\dfrac{\mathrm{d}}{\mathrm{d}t}e(t)</script><h2 id="位置式PID与增量式PID"><a href="#位置式PID与增量式PID" class="headerlink" title="位置式PID与增量式PID"></a>位置式PID与增量式PID</h2><p>在计算机系统中，数字PID控制算法通常分为位置式PID与增量式PID。</p>
+<p>位置式PID表示为：</p>
+<script type="math/tex; mode=display">
+u(k)=K_pe(k)+K_i\sum_{i=0}e(i)+K_d[e(k)-e(k-1)]</script><p>增量式PID表示为：</p>
+<script type="math/tex; mode=display">
+u(k)=K_p(e(k)-e(k-1))+K_ie(k)+K_d[e(k)-2e(k-1)+e(k-2)]</script><p>其中增量式PID在电机控制等带有积分环节的场景下更加常用，其计算量较小，只与近三次的误差值有关，不会产生过大的累计误差。</p>
+<h2 id="串级PID"><a href="#串级PID" class="headerlink" title="串级PID"></a>串级PID</h2><p>123</p>
+<h2 id="基于前馈补偿的PID"><a href="#基于前馈补偿的PID" class="headerlink" title="基于前馈补偿的PID"></a>基于前馈补偿的PID</h2><h2 id="模糊PID"><a href="#模糊PID" class="headerlink" title="模糊PID"></a>模糊PID</h2>
+  </div>
+</article>
+// disqus 评论系统部分
+
+// 下面添加 Gitalk 部分
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+    <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script>
+    <script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+    <div id="gitalk-container"></div>
+    <script type="text/javascript">
+        var gitalk = new Gitalk({
+            clientID: 'a251c4aeb0c62b522f30',
+            clientSecret: 'a6b700130ab4a74cbd52c654259679a58463c660',
+            id: md5(window.location.pathname),
+            repo: 'zhtran.github.io',
+            owner: 'zhtran',
+            admin: 'zhtran',
+            distractionFreeMode: ''
+        })
+        gitalk.render('gitalk-container')
+    </script>
+
+
+<div>    
+  <ul class="post-copyright">
+     <li class="post-copyright-link">
+      <strong>本文作者：</strong>
+      <a href="/">zhtran</a>
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文标题：</strong>
+      <a href="{{ url_for(config.permalink) }}">
+    
+        <a class="" href="/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/">各种各样的PID</a>
+    
+
+
+</a>
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a title="各种各样的PID">http://zhtran.com/2024/04/18/各种各样的PID/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本文由 zhtran 原创，采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.zh" title="Attribution-NonCommercial-NoDerivatives 4.0 International" rel="license" target="_blank">CC BY-NC-ND 4.0</a>, 转载请保留以上声明信息！
+    </li>
+  </ul>
+</div>
+
+<script>
+  function setClipboardText(event){
+      // clipboardData 对象是为通过编辑菜单、快捷菜单和快捷键执行的编辑操作所保留的，也就是你复制或者剪切内容
+      let clipboardData = event.clipboardData || window.clipboardData;
+      // 如果未复制或者未剪切，则return出去
+      if (!clipboardData) { return; }
+      event.preventDefault();
+      // Selection 对象，表示用户选择的文本范围或光标的当前位置。
+      //     声明一个变量接收 -- 用户输入的剪切或者复制的文本转化为字符串
+      let text = window.getSelection().toString();
+  
+      if (text) {
+          // 如果文本存在则先取消文本默认事件
+          event.preventDefault();
+          // 通过调用常clipboardData对象的 setData(format, data) 方法；来设置相关文本
+          // format: 一个DOMString 表示要添加到 drag object的拖动数据的类型。
+          // data: 一个 DOMString表示要添加到 drag object的数据。
+          var copyright = '\n\n'
+          + '——————————————————————'
+          + '\n版权声明：本文为「zhtran」的原创文章，遵循CC BY-NC-ND 4.0版权协议，转载请附上原文出处链接及本声明。'
+          + '\n原文链接：http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/'
+  
+          clipboardData.setData('text/plain', text + copyright);
+  
+      }
+  };
+  var contents = document.getElementsByClassName("content");
+  // 监听文章内容的copy事件
+  contents[0].addEventListener('copy',function(e){
+      setClipboardText(e);
+  });
+</script>
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@2.7.8/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/tags/">Tag</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%8D%E7%BD%AE%E5%BC%8FPID%E4%B8%8E%E5%A2%9E%E9%87%8F%E5%BC%8FPID"><span class="toc-number">1.</span> <span class="toc-text">位置式PID与增量式PID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%B2%E7%BA%A7PID"><span class="toc-number">2.</span> <span class="toc-text">串级PID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E5%89%8D%E9%A6%88%E8%A1%A5%E5%81%BF%E7%9A%84PID"><span class="toc-number">3.</span> <span class="toc-text">基于前馈补偿的PID</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E7%B3%8APID"><span class="toc-number">4.</span> <span class="toc-text">模糊PID</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&text=各种各样的PID"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&title=各种各样的PID"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&is_video=false&description=各种各样的PID"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=各种各样的PID&body=Check out this article: http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&title=各种各样的PID"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&title=各种各样的PID"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&title=各种各样的PID"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&title=各种各样的PID"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&name=各种各样的PID&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=http://zhtran.com/2024/04/18/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84PID/&t=各种各样的PID"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2016-2024
+    zhtran
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+      --><li><a href="/">Home</a></li><!--
+    --><!--
+      --><li><a href="/archives/">Writing</a></li><!--
+    --><!--
+      --><li><a href="/tags/">Tag</a></li><!--
+    --><!--
+      --><li><a href="/categories/">Category</a></li><!--
+    --><!--
+      --><li><a href="/about/">About</a></li><!--
+    --><!--
+      --><li><a href="/search/">Search</a></li><!--
+    -->
+      </ul>
+      <ul>
+        
+          <span id="busuanzi_container_site_pv">
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+          </span>
+          <span class="post-meta-divider">|</span>
+          <span id="busuanzi_container_site_uv" style='display:none'>
+                  本站访客数<span id="busuanzi_value_site_uv"></span>人
+          </span>
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+        
+      </ul>
+    </nav>
+  </div>
+  
+</footer>
+
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+  <script type="text/javascript">
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?a8d20fefb8b1edfedd3eef4d5391d4f5";
+          var s = document.getElementsByTagName("script")[0];
+          s.parentNode.insertBefore(hm, s);
+        })();
+        </script>
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+<!-- FancyBox -->
+
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+</body>
+</html>
